@@ -15,11 +15,40 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String    @id
+  firstName  String?
+  lastName   String?
+  email      String    @unique
+  imageUrl   String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  clerkId    String    @unique
+  jobs       Job[]     
+}
 
-  @@map("users")
+enum Status {
+  PENDING
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+  ACCEPTED
+}
+
+model Job {
+  id             String   @id @default(uuid())
+  Company        String
+  Role           String
+  Contact        String
+  SentOn         DateTime
+  Source         Status   @default(PENDING)
+  NextActionDate DateTime
+  Referral       Boolean
+  ReferralName   String?
+  Notes          String?
+  LinkCV         String?
+  LinkToProject  String?
+  Feedback       String?
+  userId         String   
+  user           User     @relation(fields: [userId], references: [id])
 }
